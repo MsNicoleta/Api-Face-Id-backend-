@@ -1,0 +1,3 @@
+[submodule "face-id-api"]
+	path = face-id-api
+	url = https://github.com/MsNicoleta/id-face.git
