@@ -26,10 +26,11 @@ const database = {
 }
 
 app.get('/', (req, res) => {
-        res.send('the response is working');
+        res.send(database.users);  //here we will see the information the user insert at the registration point.
 
 })
 
+//below we have the signin form 
 app.post('/signin', (req, res) => {
     if (req.body.email === database.users[0].email &&
         req.body.password === database.users[0].password) {
@@ -40,10 +41,11 @@ app.post('/signin', (req, res) => {
     res.json('signin')
 });
 
+//below we have the registration form with all the information from the user
 app.post('/register', (req, res) => {
     const { email, name, password } = req.body;
     database.users.push({
-        id: "126",
+        id: '126',
         name: name,
         email: email,
         password: password,
@@ -53,6 +55,7 @@ app.post('/register', (req, res) => {
     res.json(database.users[database.users.length-1]);
     })
 
+    //below we have the server commection
 app.listen(3000,() => {
     console.log ('app is listening on port 3000');
 })
@@ -60,9 +63,9 @@ app.listen(3000,() => {
 
 /*
 /--> res => the response is working
-/signin rout --> POST request = success/fail
-/register = POST request as we want to add the data to a database in our case a variable to a server = User object that will return
-/profile/:userId - each user will have their ourn homescreen  --> GET = user
+/ -done- signin rout --> POST request = success/fail
+/ -done- register = POST request as we want to add the data to a database in our case a variable to a server = User object that will return
+/-to be done- profile/:userId - each user will have their ourn homescreen  --> GET = user
 /image --> PUT --> user (image update rank number)
 
 
