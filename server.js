@@ -30,6 +30,7 @@ app.get('/', (req, res) => {
 
 })
 
+
 //below we have the signin form 
 app.post('/signin', (req, res) => {
     if (req.body.email === database.users[0].email &&
@@ -55,7 +56,17 @@ app.post('/register', (req, res) => {
     res.json(database.users[database.users.length-1]);
     })
 
-    //below we have the server commection
+    app.get('/profile/:id',(req, res) => {
+        const { id } = req.params;
+      database.users.forEach(user => {
+        if (user.id === id) {
+          res.json(user);
+        } else {
+          res.status(404).json('no such user');
+        }   
+      })
+    })
+    //below we have the server cnnection
 app.listen(3000,() => {
     console.log ('app is listening on port 3000');
 })
