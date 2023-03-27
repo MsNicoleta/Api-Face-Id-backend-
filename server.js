@@ -53,12 +53,12 @@ app.post('/register', (req, res) => {
         entries: 0,
         joined: new Date()
     })
-    res.json(database.users[database.users.length-1]);
+    res.json(database.users[database.users.length-1]); // length-1 will sjow us the last user added
     })
-
+// The get profile id below will return the profile object of the user.
     app.get('/profile/:id',(req, res) => {
       const { id } = req.params;
-      const found = false;
+      let found = false;
       database.users.forEach(user => {
         if (user.id === id) {
           let found = true;
@@ -67,9 +67,23 @@ app.post('/register', (req, res) => {
       })
         if (!found) {
           res.status(404).json('not found');
-        }  
-      
+      }  
     })
+
+app.put('/image/', (req, res) => { 
+  const { id } = req.body;
+      let found = false;
+      database.users.forEach(user => {
+        if (user.id === id) {
+           found = true;
+          user.entries++
+          return res.json(user.entries);
+    }
+      })
+     if (!found) {
+          res.status(404).json('not found');
+      } 
+})
       //below we have the server cnnection
   app.listen(3000,() => {
       console.log ('app is listening on port 3000');
