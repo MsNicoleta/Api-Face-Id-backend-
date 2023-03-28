@@ -1,11 +1,11 @@
 const express = require('express');
 const bcrypt = require('bcrypt-nodejs');
 const cors = require('cors');
-
 const app = express();
 
 app.use(express.json());
-app.use(cors());
+
+
 
 const database = {
     users:[
@@ -13,7 +13,7 @@ const database = {
             id: "123",
             name: "John",
             email: "john@example.com",
-            password: "password",
+            password: "lolly",
             entries: 0,
             joined: new Date()
         },
@@ -35,7 +35,9 @@ const database = {
   ]
 }
 
-app.get('/', (req, res) => {
+app.use(cors())
+
+app.get('/', (_req, res) => {
         res.send(database.users);  //here we will see the information the user insert at the registration point.
 
 })
@@ -43,6 +45,17 @@ app.get('/', (req, res) => {
 
 //below we have the signin form 
 app.post('/signin', (req, res) => {
+const { email, name, password } = req.body;
+   bcrypt.hash(password, null, null, function(_err, hash) {
+    console.log(hash);
+  });
+    bcrypt.compare("lolly", '$2a$10$eBE6Ni9Qnr4edXAnAZ.RAuqndpn2pFdMr1OMyRWh5s06ru1vKmyAu', function(_err, res) {
+     console.log('first guess', res)
+});
+bcrypt.compare("veggies", '$2a$10$0fBKrStki3UH5wlWKw7Z.OldQ6LYBgtFDv9pky9qXj2NTPclRMWQ', function(_err, res) {
+    console.log('second guess', res)
+});
+
     if (req.body.email === database.users[0].email &&
         req.body.password === database.users[0].password) {
             res.json('sucsess');
@@ -55,13 +68,11 @@ app.post('/signin', (req, res) => {
 //below we have the registration form with all the information from the user
 app.post('/register', (req, res) => {
   const { email, name, password } = req.body;
-// Load hash from your password DB.
-bcrypt.compare("apples", '$2a$10$p3bn.sDctvJBdktAzr8dK.ruE8iikAdtQW3qTl9LSHCsfEsHP0CEa', function(err, res) {
-     console.log('first guess', res)
-});
-bcrypt.compare("veggies", '$2a$10$p3bn.sDctvJBdktAzr8dK.ruE8iikAdtQW3qTl9LSHCsfEsHP0CEa', function(err, res) {
-    console.log('second guess', res)
-});
+  // bcrypt.hash(password, null, null, function(_err, hash) {
+  //   console.log(hash);
+  // });
+  
+
     database.users.push({
         id: '126',
         name: name,
@@ -103,6 +114,14 @@ app.put('/image/', (req, res) => {
 })
 
 
+
+/* // Load hash from your password DB.
+bcrypt.compare("bacon", hash, function(err, res) {
+    // res == true
+});
+bcrypt.compare("veggies", hash, function(err, res) {
+    // res = false
+}); */
 
 
       //below we have the server cnnection
