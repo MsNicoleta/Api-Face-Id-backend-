@@ -59,11 +59,11 @@ bcrypt.compare("veggies", '$2a$10$0fBKrStki3UH5wlWKw7Z.OldQ6LYBgtFDv9pky9qXj2NTP
 
     if (req.body.email === database.users[0].email &&
         req.body.password === database.users[0].password) {
-            res.json('success');
+            res.json(database.users[0]);
         }else{
             res.status(400).json('error logging in')
         }
-    res.json('signin')
+    // res.json('signin')
 });
 
 //below we have the registration form with all the information from the user
@@ -90,7 +90,7 @@ app.post('/register', (req, res) => {
       let found = false;
       database.users.forEach(user => {
         if (user.id === id) {
-          let found = true;
+          found = true;
           return res.json(user);
         }
       })
