@@ -13,7 +13,7 @@ const database = {
         {
             id: "123",
             name: "John",
-            email: "jon@ex.com",
+            email: "john@gmail.com",
             password: "lolly",
             entries: 0,
             joined: new Date()
@@ -21,7 +21,7 @@ const database = {
         {
             id: "124",
             name: "Sally",
-            email: "sally@example.com",
+            email: "sally@gmail.com",
             password: "bananas",
             entries: 0,
             joined: new Date()
@@ -31,7 +31,8 @@ const database = {
   //   {
   //     id: "987",
   //     has: '',
-  //     email: "john@example.com",
+  //     email: "sally@example.com",
+  //      password: "bananas"
   //   }
   // ]
 }
@@ -46,7 +47,7 @@ app.get('/', (_req, res) => {
 
 //below we have the signin form 
 app.post('/signin', (req, res) => {
-const { email, name, password } = req.body;
+const  { email, name, password } = req.body;
    bcrypt.hash(password, null, null, function(_err, hash) {
     console.log(hash);
   });
@@ -57,13 +58,13 @@ bcrypt.compare("veggies", '$2a$10$0fBKrStki3UH5wlWKw7Z.OldQ6LYBgtFDv9pky9qXj2NTP
     console.log('second guess', res)
 });
 
-    if (req.body.email === database.users[0].email &&
-        req.body.password === database.users[0].password) {
-            res.json(database.users[0]);
+    if (req.body.email === database.users.email &&
+        req.body.password === database.users.password) {
+            res.json(database.users);
         }else{
             res.status(400).json('error logging in')
         }
-    // res.json('signin')
+    res.json('signin')
 });
 
 //below we have the registration form with all the information from the user
@@ -75,14 +76,14 @@ app.post('/register', (req, res) => {
   
 
     database.users.push({
-        id: '126',
+        id: '125',
         name: name,
         email: email,
-        entries: 0,
         password: password,
+        entries: 0,
         joined: new Date()
     })
-    res.json(database.users[database.users.length-1]); // length-1 will sjow us the last user added
+    res.json(database.users[database.users.length-1]); // length-1 will show us the last user added
     })
 // The get profile id below will return the profile object of the user.
     app.get('/profile/:id',(req, res) => {
