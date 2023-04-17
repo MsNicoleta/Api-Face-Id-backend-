@@ -133,52 +133,25 @@ app.post('/register', (req, res) => {
       // }  
     })
 
-//     app.put('/image', (req, res) => {
-//   const { id } = req.body;
-//   database('users').where('id', '=', id)
-//   .increment('entries', 1)
-//   .returning('entries')
-//   .then(entries => {
-//     // If you are using knex.js version 1.0.0 or higher this now returns an array of objects. Therefore, the code goes from:
-//     // entries[0] --> this used to return the entries
-//     // TO
-//     // entries[0].entries --> this now returns the entries
-//     res.json(entries[0].entries);
-//   })
-//   .catch(err => res.status(400).json('unable to get entries'))
-// })
 app.put('/image/', (req, res) => { 
   const { id } = req.body;
-      let found = false;
-      database.users.forEach(user => {
-        if (user.id === id) {
-           found = true;
-          user.entries++
-          return res.json(user.entries);
-    }
-      })
-     if (!found) {
-          res.status(400).json('not found');
-      } 
+  mydb('users').where('id', '=', id)
+    .increment('entries', 1)
+    .returning('entries')
+    .then(entries => {
+      res.json(entries[0].entries);
+    })
+    .catch(err => res.status(400).json('Unable to get the entries'))
 })
 
 /* .then(entries => {
-    // If you are using knex.js version 1.0.0 or higher this now 
-    // returns an array of objects. Therefore, the code goes from:
-    // entries[0] --> this used to return the entries
-    // TO
-    // entries[0].entries --> this now returns the entries
+    If you are using knex.js version 1.0.0 or higher this now 
+    returns an array of objects. Therefore, the code goes from:
+    entries[0] --> this used to return the entries
+    TO
+    entries[0].entries --> this now returns the entries
     res.json(entries[0].entries);
   }) */
-
-/* // Load hash from your password DB.
-bcrypt.compare("bacon", hash, function(err, res) {
-    // res == true
-});
-bcrypt.compare("veggies", hash, function(err, res) {
-    // res = false
-}); */
-
 
       //below we have the server cnnection
   app.listen(3000,() => {
