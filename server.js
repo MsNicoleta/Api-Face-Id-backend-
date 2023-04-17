@@ -20,73 +20,55 @@ const mydb = knex({
 const app = express();
 
 
-
-
-
-const database = {
-    users:[
-        {
-            id: "123",
-            name: "John",
-            email: "john@gmail.com",
-            password: "lolly",
-            entries: 0,
-            joined: new Date()
-        },
-        {
-            id: "124",
-            name: "Sally",
-            email: "sally@gmail.com",
-            password: "bananas",
-            entries: 0,
-            joined: new Date()
-        }
-  ],
-  // login: [
-  //   {
-  //     id: "987",
-  //     has: '',
-  //     email: "sally@example.com",
-  //      password: "bananas"
-  //   }
-  // ]
-}
 app.use(express.json());
 app.use(cors())
 
 app.get('/', (_req, res) => {
+        // eslint-disable-next-line no-undef
         res.send(database.users);  //here we will see the information the user insert at the registration point.
 
 })
 
 
 //below we have the signin form 
-app.post('/signin', (req, res) => {
-const  { email, name, password } = req.body;
-   bcrypt.hash(password, null, null, function(_err, hash) {
-    console.log(hash);
-  });
-    bcrypt.compare("lolly", '$2a$10$eBE6Ni9Qnr4edXAnAZ.RAuqndpn2pFdMr1OMyRWh5s06ru1vKmyAu', function(_err, res) {
-     console.log('first guess', res)
-});
-bcrypt.compare("veggies", '$2a$10$0fBKrStki3UH5wlWKw7Z.OldQ6LYBgtFDv9pky9qXj2NTPclRMWQ', function(_err, res) {
-    console.log('second guess', res)
-});
 
-    if (req.body.email === database.users[0].email &&
-        req.body.password === database.users[0].password) {
-            res.json(database.users[0]);
-        }else{
-            res.status(400).json('error logging in')
-        }
-    res.json('signin')
-});
+app.post('/signin', (req, res) => {
+  mydb.select('email', 'hash').from('login')
+    .where('email', '=', req.body.email)
+    .then(data => {
+      const isValid = bcrypt.compareSync(req.body.password, data[0].hash);
+      if (isValid) {
+        return mydb.select('*').from('users')
+          .where('email', '=', req.body.email)
+          .then(user => {
+            res.json(user[0])
+          })
+          .catch(err => res.status(400).json('unable to get user'))
+      } else {
+        res.status(400).json('wrong credentials')
+      }
+    })
+    .catch(err => res.status(400).json('wrong credentials'))
+})
+
+
+/* .insert({
+  If using Knex.js version 1.0.0 or higher this 
+  now returns an array of objects. Therefore, the code goes from:
+  loginEmail[0] --> this used to return the email
+  TO
+  loginEmail[0].email --> this now returns the email
+     email: loginEmail[0].email, // <-- this is the only change!
+     name: name,
+     joined: new Date()
+}) */
+
 
 //below we have the registration form with all the information from the user
 
 app.post('/register', (req, res) => {
   const { email, name, password } = req.body;
-  const hash = bcrypt.hashSync(password);
+  const hash = bcrypt.hashSync(password);// in this examole we will use a synchronous hash by storing the passords as they will be requested and the next login. for this we will have to use code blocks named transactions so if one system fails they both fail or proseed .
     mydb.transaction(trx => {
       trx.insert({
         hash: hash,
@@ -95,7 +77,7 @@ app.post('/register', (req, res) => {
       .into('login')
       .returning('email')
       .then(loginEmail => {
-        return trx('users')
+        return trx('users')//trx = transaction
           .returning('*')
           .insert({
         
@@ -145,7 +127,7 @@ app.put('/image/', (req, res) => {
 })
 
 /* .then(entries => {
-    If you are using knex.js version 1.0.0 or higher this now 
+    If using knex.js version 1.0.0 or higher this now 
     returns an array of objects. Therefore, the code goes from:
     entries[0] --> this used to return the entries
     TO
