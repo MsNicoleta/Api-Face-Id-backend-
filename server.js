@@ -83,19 +83,38 @@ bcrypt.compare("veggies", '$2a$10$0fBKrStki3UH5wlWKw7Z.OldQ6LYBgtFDv9pky9qXj2NTP
 });
 
 //below we have the registration form with all the information from the user
+
 app.post('/register', (req, res) => {
   const { email, name, password } = req.body;
-  // bcrypt.hash(password, null, null, function(_err, hash) {
-  //   console.log(hash);
-  // });
-
-    mydb('users').insert({
-        name: name,
-        email: email,
-        joined: new Date()
-    }).then(console.log)
-    res.json(database.users[database.users.length-1]); // length-1 will show us the last user added
+  const hash = bcrypt.hashSync(password);
+    mydb.transaction(trx => {
+      trx.insert({
+        hash: hash,
+        email: email
+      })
+      .into('login')
+      .returning('email')
+      .then(loginEmail => {
+        return trx('users')
+          .returning('*')
+          .insert({
+        
+            email: loginEmail[0].email,
+            name: name,
+            joined: new Date()
+          })
+          .then(user => {
+            res.json(user[0]);
+          })
+      })
+      .then(trx.commit)
+      .catch(trx.rollback)
     })
+    .catch(err => res.status(400).json('unable to register'))
+})
+    
+
+
 // The get profile id below will return the profile object of the user.
     app.get('/profile/:id',(req, res) => {
       const { id } = req.params;
