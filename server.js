@@ -1,6 +1,21 @@
 const express = require('express');
 const bcrypt = require('bcrypt-nodejs');
 const cors = require('cors');
+const knex = require('knex')
+ 
+const mydb = knex({
+  client: 'pg',
+  connection: {
+    host : '127.0.0.1',
+    port : 5432,
+    user : 'ng',
+    password : 'postgres2023',
+    database : 'mydb'
+  }
+  });
+// mydb.select('*').from('users').then(data => {
+//   console.log(data);
+// });
 
 const app = express();
 
@@ -58,9 +73,9 @@ bcrypt.compare("veggies", '$2a$10$0fBKrStki3UH5wlWKw7Z.OldQ6LYBgtFDv9pky9qXj2NTP
     console.log('second guess', res)
 });
 
-    if (req.body.email === database.users.email &&
-        req.body.password === database.users.password) {
-            res.json(database.users);
+    if (req.body.email === database.users[0].email &&
+        req.body.password === database.users[0].password) {
+            res.json(database.users[0]);
         }else{
             res.status(400).json('error logging in')
         }
@@ -73,16 +88,12 @@ app.post('/register', (req, res) => {
   // bcrypt.hash(password, null, null, function(_err, hash) {
   //   console.log(hash);
   // });
-  
 
-    database.users.push({
-        id: '125',
+    mydb('users').insert({
         name: name,
         email: email,
-        password: password,
-        entries: 0,
         joined: new Date()
-    })
+    }).then(console.log)
     res.json(database.users[database.users.length-1]); // length-1 will show us the last user added
     })
 // The get profile id below will return the profile object of the user.
