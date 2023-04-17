@@ -118,16 +118,19 @@ app.post('/register', (req, res) => {
 // The get profile id below will return the profile object of the user.
     app.get('/profile/:id',(req, res) => {
       const { id } = req.params;
-      let found = false;
-      database.users.forEach(user => {
-        if (user.id === id) {
-          found = true;
-          return res.json(user);
-        }
-      })
-        if (!found) {
-          res.status(404).json('not found');
-      }  
+      mydb.select('*').from('users').where({id})
+        .then(user => {
+          // console.log(user)
+          if (user.length) {
+            res.json(user[0]);
+          } else {
+             res.status(400).json('Not found');
+          }
+        })
+      .catch(err => res.status(400).json('error getting user'))
+      //   if (!found) {
+      //     res.status(404).json('not found');
+      // }  
     })
 
 //     app.put('/image', (req, res) => {
@@ -159,7 +162,14 @@ app.put('/image/', (req, res) => {
       } 
 })
 
-
+/* .then(entries => {
+    // If you are using knex.js version 1.0.0 or higher this now 
+    // returns an array of objects. Therefore, the code goes from:
+    // entries[0] --> this used to return the entries
+    // TO
+    // entries[0].entries --> this now returns the entries
+    res.json(entries[0].entries);
+  }) */
 
 /* // Load hash from your password DB.
 bcrypt.compare("bacon", hash, function(err, res) {
