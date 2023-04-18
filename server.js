@@ -1,7 +1,8 @@
 const express = require('express');
 const bcrypt = require('bcrypt-nodejs');
 const cors = require('cors');
-const knex = require('knex')
+const knex = require('knex');
+const register = require('./controllers/register');
  
 const mydb = knex({
   client: 'pg',
@@ -66,35 +67,7 @@ app.post('/signin', (req, res) => {
 
 //below we have the registration form with all the information from the user
 
-app.post('/register', (req, res) => {
-  const { email, name, password } = req.body;
-  const hash = bcrypt.hashSync(password);// in this examole we will use a synchronous hash by storing the passords as they will be requested and the next login. for this we will have to use code blocks named transactions so if one system fails they both fail or proseed .
-    mydb.transaction(trx => {
-      trx.insert({
-        hash: hash,
-        email: email
-      })
-      .into('login')
-      .returning('email')
-      .then(loginEmail => {
-        return trx('users')//trx = transaction
-          .returning('*')
-          .insert({
-        
-            email: loginEmail[0].email,
-            name: name,
-            joined: new Date()
-          })
-          .then(user => {
-            res.json(user[0]);
-          })
-      })
-      .then(trx.commit)
-      .catch(trx.rollback)
-    })
-    .catch(err => res.status(400).json('unable to register'))
-})
-    
+app.post('/register', (req, res) => { register.hendleRegister(req,res,mydb,bcrypt) } ) // this is so called dipendencies injections
 
 
 // The get profile id below will return the profile object of the user.
