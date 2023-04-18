@@ -1,4 +1,5 @@
 
+//below we have the registration form with all the information from the user
 
  const handleRegister = (req,res,mydb,bcrypt) => {
   const { email, name, password } = req.body;

@@ -2,7 +2,11 @@ const express = require('express');
 const bcrypt = require('bcrypt-nodejs');
 const cors = require('cors');
 const knex = require('knex');
+
 const register = require('./controllers/register');
+const signin = require('./controllers/signin');
+const profile = require('./controllers/profile');
+const image = require('./controllers/image');
  
 const mydb = knex({
   client: 'pg',
@@ -33,71 +37,16 @@ app.get('/', (_req, res) => {
 
 //below we have the signin form 
 
-app.post('/signin', (req, res) => {
-  mydb.select('email', 'hash').from('login')
-    .where('email', '=', req.body.email)
-    .then(data => {
-      const isValid = bcrypt.compareSync(req.body.password, data[0].hash);
-      if (isValid) {
-        return mydb.select('*').from('users')
-          .where('email', '=', req.body.email)
-          .then(user => {
-            res.json(user[0])
-          })
-          .catch(err => res.status(400).json('unable to get user'))
-      } else {
-        res.status(400).json('wrong credentials')
-      }
-    })
-    .catch(err => res.status(400).json('wrong credentials'))
-})
+app.post('/signin', (req,res)=>{signin.handleSignin(req,res,mydb,bcrypt)} )
 
 
-/* .insert({
-  If using Knex.js version 1.0.0 or higher this 
-  now returns an array of objects. Therefore, the code goes from:
-  loginEmail[0] --> this used to return the email
-  TO
-  loginEmail[0].email --> this now returns the email
-     email: loginEmail[0].email, // <-- this is the only change!
-     name: name,
-     joined: new Date()
-}) */
-
-
-//below we have the registration form with all the information from the user
-
-app.post('/register', (req, res) => { register.hendleRegister(req,res,mydb,bcrypt) } ) // this is so called dipendencies injections
+app.post('/register', (req, res) => { register.handleRegister(req,res,mydb,bcrypt) } ) // this is so called dipendencies injections
 
 
 // The get profile id below will return the profile object of the user.
-    app.get('/profile/:id',(req, res) => {
-      const { id } = req.params;
-      mydb.select('*').from('users').where({id})
-        .then(user => {
-          // console.log(user)
-          if (user.length) {
-            res.json(user[0]);
-          } else {
-             res.status(400).json('Not found');
-          }
-        })
-      .catch(err => res.status(400).json('error getting user'))
-      //   if (!found) {
-      //     res.status(404).json('not found');
-      // }  
-    })
+    app.get('/profile/:id',(req, res) =>{profile.handleProfileGet(req,res,mydb)} )
 
-app.put('/image/', (req, res) => { 
-  const { id } = req.body;
-  mydb('users').where('id', '=', id)
-    .increment('entries', 1)
-    .returning('entries')
-    .then(entries => {
-      res.json(entries[0].entries);
-    })
-    .catch(err => res.status(400).json('Unable to get the entries'))
-})
+app.put('/image/',(req, res) =>{image.handleImage(req,res,mydb)} )
 
 /* .then(entries => {
     If using knex.js version 1.0.0 or higher this now 
