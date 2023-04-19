@@ -2,7 +2,10 @@
 //below we have the registration form with all the information from the user
 
  const handleRegister = (req,res,mydb,bcrypt) => {
-  const { email, name, password } = req.body;
+     const { email, name, password } = req.body;
+     if (!email || !name || !password) {
+       return res.status(400).json('incorect form submission');
+     }
   const hash = bcrypt.hashSync(password);// in this examole we will use a synchronous hash by storing the passords as they will be requested and the next login. for this we will have to use code blocks named transactions so if one system fails they both fail or proseed .
     mydb.transaction(trx => {
       trx.insert({
