@@ -44,7 +44,8 @@ app.post('/register', (req, res) => { register.handleRegister(req,res,mydb,bcryp
 app.get('/profile/:id',(req, res) =>{profile.handleProfileGet(req,res,mydb)} )
 
 app.put('/image/',(req, res) =>{image.handleImage(req,res,mydb)} )
-app.put('/imageurl/',(req, res) =>{image.handleApiCall(req,res)} )
+app.post('/imageurl', (req, res) => { image.handleApiCall(req, res)})
+
 
 
 

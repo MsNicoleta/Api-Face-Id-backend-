@@ -1,4 +1,6 @@
-const {ClarifaiStub, grpc} = require("clarifai-nodejs-grpc");
+const { ClarifaiStub, grpc } = require("clarifai-nodejs-grpc");
+const Clarifai = require("clarifai");
+console.log(Clarifai)
 
 const stub = ClarifaiStub.grpc();
 
@@ -10,8 +12,8 @@ const handleApiCall = (req, res) => {
   stub.PostModelOutputs(
     {
       // This is the model ID of a publicly available General model. You may use any other public or custom model ID.
-      /* model_id: "face-detection", */
-      model_id: "aaa03c23b3724a16a56b629203edc62c",
+      model_id: 'face-detection',
+      // model_id: "aaa03c23b3724a16a56b629203edc62c",
       inputs: [{ data: { image: { url: req.body.input } } }]
       
     },
@@ -31,6 +33,8 @@ const handleApiCall = (req, res) => {
       for (const c of response.outputs[0].data.concepts) {
         console.log(c.name + ": " + c.value);
       }
+      res.json(response);
+
     }
   );
   // app.models
