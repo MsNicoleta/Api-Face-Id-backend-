@@ -19,7 +19,7 @@
     "web-vitals": "^2.1.0"
   },
   "scripts": {
-    "start": "nodemon server.js"
+    "start": "server.js"
   },
   "eslintConfig": {
     "extends": [
@@ -27,9 +27,7 @@
       "react-app/jest"
     ]
   },
-  "devDependencies": {
-    "nodemon": "^2.0.22"
-  },
+  "devDependencies": {},
   "browserslist": {
     "production": [
       ">0.2%",
