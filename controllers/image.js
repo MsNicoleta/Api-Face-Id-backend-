@@ -1,6 +1,6 @@
 const { ClarifaiStub, grpc } = require("clarifai-nodejs-grpc");
-const Clarifai = require("clarifai");
-console.log(Clarifai)
+// const Clarifai = require("clarifai");
+// console.log(Clarifai)
 
 const stub = ClarifaiStub.grpc();
 
