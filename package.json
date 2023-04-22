@@ -5,7 +5,7 @@
   "main": "script.js",
   "scripts": {
     "start(dev)": "nodemon server.js",
-      "start":  "node index.js"
+      "start":  "server.js"
   },
   "dependencies": {
     "@testing-library/jest-dom": "^5.14.1",
