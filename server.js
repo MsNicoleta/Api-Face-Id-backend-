@@ -50,7 +50,7 @@ app.post('/imageurl', (req, res) => { image.handleApiCall(req, res)})
 
 
       //below we have the server cnnection
-  app.listen("https://face-id-backend.onrender.com",() => {
-      console.log ('app is listening on port render.com');
+  app.listen(3000,() => {
+      console.log ('app is listening on port 3000');
 })
 
