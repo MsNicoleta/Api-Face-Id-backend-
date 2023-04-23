@@ -11,7 +11,7 @@ const image = require('./controllers/image');
 const mydb = knex({
   client: 'pg',
   connection: {
-    host : 'dpg-ch1ak2r3cv203bohdao0-a.frankfurt-postgres.render.com',
+    host : 'postgres://ng:1MvVX9BMlVtHIzfr2rfFkZSJNnfWuKtD@dpg-ch1ak2r3cv203bohdao0-a.frankfurt-postgres.render.com/mydb_n8ks',
     ssl:true,
    
   }
