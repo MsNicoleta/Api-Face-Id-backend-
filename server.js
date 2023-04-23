@@ -11,11 +11,9 @@ const image = require('./controllers/image');
 const mydb = knex({
   client: 'pg',
   connection: {
-    host : '127.0.0.1',
-    port : 5432,
-    user : 'ng',
-    password : 'postgres2023',
-    database : 'mydb'
+    host : 'dpg-ch1ak2r3cv203bohdao0-a.frankfurt-postgres.render.com',
+    ssl:true,
+   
   }
   });
 // mydb.select('*').from('users').then(data => {
