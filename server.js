@@ -33,9 +33,8 @@ app.use(cors())
 
 app.get('/', (_req, res) => {
   // eslint-disable-next-line no-undef
-  res.send(database.users);  //here we will see the information the user insert at the registration point.
+  res.send("it is working");  //here we will see the information the user insert at the registration point.
 })
-
 
 //below we have the signin form
 
