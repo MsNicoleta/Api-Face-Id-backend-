@@ -31,9 +31,10 @@ const app = express();
 app.use(express.json());
 app.use(cors())
 
-app.get('/', (_req, res) => {
-  // eslint-disable-next-line no-undef
+app.get('/', (req, res) => {
   res.send('it is working')  //here we will see the information the user insert at the registration point.
+
+  // eslint-disable-next-line no-undef
 })
 
 //below we have the signin form
