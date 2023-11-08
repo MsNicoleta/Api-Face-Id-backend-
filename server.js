@@ -12,7 +12,7 @@ const mydb = knex({
   client: 'pg',
   connection: {
     connectionString: process.env.DATABASE_URL,
-    ss1: { rejectUnauthorized: false },
+    ss1: true,
     host: process.env.DATABASE_HOST,
     port: 5432,
     user: process.env.DATABASE_USER,
